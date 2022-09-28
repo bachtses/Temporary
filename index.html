@@ -1,0 +1,176 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>tf.loadModel() Progress Usage</title>
+
+    <!-- this tf.min.js file is built locally through yalc -->
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@0.10.0"></script>
+
+    <style>
+
+        #loadModel, #loadFrozenModel, #loadTFHubModule {
+
+            height: 100px;
+
+        }
+
+        #loadDownloading, #loadComplete, #loadProgress,
+        #frozenDownloading, #frozenComplete, #frozenProgress,
+        #hubDownloading, #hubComplete, #hubProgress {
+
+            display: none;
+
+        }
+
+    </style>
+
+</head>
+<body>
+
+<div id="loadModel">
+
+    <div>
+        <span>TensorFlow.js tf.loadModel() Progress</span>
+        <button onclick="loadModel()">Load</button>
+    </div>
+
+    <div id="loadDownloading">Downloading ResNet50 ... <span id="loadPercentage">0</span>% Complete.</div>
+    <div id="loadComplete">Download Completed!</div>
+
+    <progress id="loadProgress" value="0" max="100">o(T.T)o</progress>
+
+</div>
+
+<div id="loadFrozenModel">
+    <span>TensorFlow.js tf.loadFrozenModel() Progress</span>
+    <button onclick="loadFrozenModel()">Load</button>
+
+    <div id="frozenDownloading">Downloading Yolov2-tiny ... <span id="frozenPercentage">0</span>% Complete.</div>
+    <div id="frozenComplete">Download Completed!</div>
+
+    <progress id="frozenProgress" value="0" max="100">o(︶.︶)o</progress>
+
+</div>
+
+<div id="loadTFHubModule">
+    <span>TensorFlow.js tf.loadTfHubModule() Progress</span>
+    <button onclick="loadTFHubModule()">Load</button>
+
+    <div id="hubDownloading">Downloading MobileNet-V2 ... <span id="hubPercentage">0</span>% Complete.</div>
+    <div id="hubComplete">Download Completed!</div>
+
+    <progress id="hubProgress" value="0" max="100">o(^.^)o</progress>
+
+</div>
+
+<script>
+
+    function loadModel() {
+
+		showProgress( "loadDownloading", "loadProgress", "loadComplete" );
+
+		( async () => {
+
+			const loadedModel = await tf.loadModel(
+
+				'./model/resnet50/model.json',
+				// Also work well with http url
+				// 'https://tensorspace.org/assets/model/resnet50/model.json',
+				true,
+				onprogress
+
+			);
+
+
+			showComplete( "loadDownloading", "loadComplete" );
+
+			function onprogress( percentage ) {
+
+				document.getElementById( "loadProgress" ).value = ( 100 * percentage ).toFixed( 0 ).toString();
+				document.getElementById( "loadPercentage" ).innerHTML = ( 100 * percentage ).toFixed( 0 );
+
+			}
+
+		} )();
+
+    }
+
+    function loadFrozenModel() {
+
+		showProgress( "frozenDownloading", "frozenProgress", "frozenComplete" );
+
+		( async () => {
+
+			const loadedModel = await tf.loadFrozenModel(
+
+				'./model/yolov2tiny/tensorflowjs_model.pb',
+				'./model/yolov2tiny/weights_manifest.json',
+				// Also work well with http url
+				// 'https://tensorspace.org/assets/model/yolov2-tiny/tensorflowjs_model.pb',
+				// 'https://tensorspace.org/assets/model/yolov2-tiny/weights_manifest.json',
+                null,
+				onprogress
+
+			);
+
+			showComplete( "frozenDownloading", "frozenComplete" );
+
+			function onprogress( percentage ) {
+
+				document.getElementById( "frozenProgress" ).value = ( 100 * percentage ).toFixed( 0 ).toString();
+				document.getElementById( "frozenPercentage" ).innerHTML = ( 100 * percentage ).toFixed( 0 );
+
+			}
+
+		} )();
+
+    }
+
+    function loadTFHubModule() {
+
+		showProgress( "hubDownloading", "hubProgress", "hubComplete" );
+
+		( async () => {
+
+			const loadedModel = await tf.loadTfHubModule(
+
+				'https://tfhub.dev/google/imagenet/mobilenet_v2_140_224/classification/2',
+                null,
+				onprogress
+
+			);
+
+			showComplete( "hubDownloading", "hubComplete" );
+
+			function onprogress( percentage ) {
+
+				document.getElementById( "hubProgress" ).value = ( 100 * percentage ).toFixed( 0 ).toString();
+				document.getElementById( "hubPercentage" ).innerHTML = ( 100 * percentage ).toFixed( 0 );
+
+			}
+
+		} )();
+
+    }
+
+    function showProgress( downloadID, progressID, completeID ) {
+
+		document.getElementById( downloadID ).style.display = "block";
+		document.getElementById( progressID ).style.display = "block";
+		document.getElementById( completeID ).style.display = "none";
+
+    }
+
+    function showComplete( downloadID, completeID ) {
+
+		document.getElementById( downloadID ).style.display = "none";
+		document.getElementById( completeID ).style.display = "block";
+
+    }
+
+</script>
+
+</body>
+</html>
