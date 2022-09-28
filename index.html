@@ -73,15 +73,13 @@
 
 		( async () => {
 
-			const loadedModel = await tf.loadModel(
-
-				//'./model/resnet50/model.json',
-				// Also work well with http url
-				'https://raw.githubusercontent.com/bachtses/Medical-Report-Generation-Tool-First-Prototype/main/models/X-Ray_Lung_Cancer_Classification/model.json',
+			const loadedModel = await tf.loadLayersModel('https://raw.githubusercontent.com/bachtses/Medical-Report-Generation-Tool-First-Prototype/main/models/X-Ray_Lung_Cancer_Classification/model.json',
 				true,
 				onprogress
 
 			);
+			
+			
 
 
 			showComplete( "loadDownloading", "loadComplete" );
